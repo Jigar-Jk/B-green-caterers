@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { Plus, Edit2, Trash2, Upload, X, Check, Menu as MenuIcon, Home, LayoutDashboard, UtensilsCrossed, LogOut, Search, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import { api, API_ENDPOINTS } from '@/config/api';
+import { AnimatePresence, motion } from 'framer-motion';
+import { Check, Edit2, Home, LogOut, Menu as MenuIcon, Plus, Search, Trash2, Upload, UtensilsCrossed } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function AdminDashboard() {
@@ -13,7 +13,7 @@ export default function AdminDashboard() {
   const [showForm, setShowForm] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false); // Default to false for mobile-first
   const [searchQuery, setSearchQuery] = useState('');
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -25,6 +25,18 @@ export default function AdminDashboard() {
       navigate('/admin');
     }
   }, [navigate]);
+
+  // Initialize sidebar state based on screen size
+  useEffect(() => {
+    const handleResize = () => {
+      setSidebarOpen(window.innerWidth >= 1024); // lg breakpoint
+    };
+    
+    handleResize(); // Set initial state
+    window.addEventListener('resize', handleResize);
+    
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -194,40 +206,35 @@ export default function AdminDashboard() {
 
   return (
     <div className="min-h-screen flex bg-gray-50">
+      {/* Overlay for mobile */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+
       {/* Sidebar */}
       <motion.aside
         initial={{ x: -280 }}
         animate={{ x: sidebarOpen ? 0 : -280 }}
-        className="fixed left-0 top-0 h-full w-64 bg-white shadow-lg z-50 flex flex-col"
+        className="fixed left-0 top-0 h-screen w-64 bg-white shadow-lg z-50 flex flex-col lg:relative lg:translate-x-0"
       >
-        {/* Sidebar Header */}
-        <div className="p-6 border-b border-gray-200">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-forest rounded-full flex items-center justify-center">
-              <span className="text-white font-bold text-lg">B</span>
-            </div>
-            <div>
-              <h2 className="font-bold text-forest text-lg">B Green Admin</h2>
-              <p className="text-xs text-gray-500">Caterers Dashboard</p>
-            </div>
-          </div>
-        </div>
-
         {/* Admin User */}
-        <div className="p-4 border-b border-gray-200">
+        <div className="p-6 border-b border-gray-200 flex-shrink-0">
           <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
-              <span className="text-white font-semibold">{adminEmail.charAt(0).toUpperCase()}</span>
+            <div className="w-12 h-12 bg-forest rounded-full flex items-center justify-center">
+              <span className="text-white font-semibold text-lg">{adminEmail.charAt(0).toUpperCase()}</span>
             </div>
             <div className="flex-1">
-              <p className="font-semibold text-gray-800 text-sm">Admin User</p>
-              <p className="text-xs text-gray-500">{adminEmail}</p>
+              <p className="font-semibold text-gray-800">Admin User</p>
+              <p className="text-sm text-gray-500">{adminEmail}</p>
             </div>
           </div>
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 p-4 space-y-2">
+        <nav className="p-6 space-y-3 flex-shrink-0">
           <button
             onClick={() => navigate('/')}
             className="w-full flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-gray-100 rounded-lg transition-colors"
@@ -236,52 +243,55 @@ export default function AdminDashboard() {
             <span className="font-medium">View Public Site</span>
           </button>
           
-          <button className="w-full flex items-center space-x-3 px-4 py-3 bg-blue-600 text-white rounded-lg">
+          <button className="w-full flex items-center space-x-3 px-4 py-3 bg-forest text-white rounded-lg shadow-sm">
             <UtensilsCrossed className="w-5 h-5" />
             <span className="font-medium">Menu Items</span>
           </button>
         </nav>
 
-        {/* Logout */}
-        <div className="p-4 border-t border-gray-200">
+        {/* Spacer to push footer to bottom */}
+        <div className="flex-1 min-h-0"></div>
+
+        {/* Logout Footer - Fixed at bottom */}
+        <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 flex-shrink-0">
           <button
             onClick={handleLogout}
-            className="w-full flex items-center space-x-3 px-4 py-3 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+            className="w-full flex items-center justify-center space-x-2 px-4 py-3 text-red-600 hover:bg-red-50 rounded-lg transition-colors border border-red-200 hover:border-red-300"
           >
-            <LogOut className="w-5 h-5" />
+            <LogOut className="w-4 h-4" />
             <span className="font-medium">Logout</span>
           </button>
         </div>
       </motion.aside>
 
       {/* Main Content */}
-      <main className={`flex-1 transition-all duration-300 ${sidebarOpen ? 'ml-64' : 'ml-0'}`}>
-        {/* Top Bar */}
+      <div className={`flex-1 flex flex-col transition-all duration-300 ${sidebarOpen ? 'lg:ml-0' : 'lg:ml-0'}`}>
+        {/* Header */}
         <div className="bg-white border-b border-gray-200 sticky top-0 z-40">
-          <div className="flex items-center justify-between px-6 py-4">
+          <div className="flex items-center justify-between px-4 sm:px-6 py-4">
             <div className="flex items-center space-x-4">
               <button
                 onClick={() => setSidebarOpen(!sidebarOpen)}
                 className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
               >
-                <MenuIcon className="w-6 h-6 text-gray-600" />
+                <MenuIcon className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600" />
               </button>
               <div>
-                <h1 className="text-2xl font-bold text-gray-800">Dashboard</h1>
-                <p className="text-sm text-gray-500">Manage programs and initiatives</p>
+                <h1 className="text-lg sm:text-2xl font-bold text-gray-800">Dashboard</h1>
+                <p className="text-xs sm:text-sm text-gray-500 hidden sm:block">Manage programs and initiatives</p>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="p-6">
+        <div className="p-4 sm:p-6 flex-1 flex flex-col">
           {/* Page Header */}
-          <div className="mb-6">
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-gray-800">Menu Management</h2>
+          <div className="mb-4 sm:mb-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 sm:mb-6 space-y-3 sm:space-y-0">
+              <h2 className="text-xl sm:text-2xl font-bold text-gray-800">Menu Management</h2>
               <Button
                 onClick={() => setShowForm(!showForm)}
-                className="bg-blue-600 hover:bg-blue-700 text-white"
+                className="bg-forest hover:bg-light-green text-white w-full sm:w-auto"
               >
                 <Plus className="w-4 h-4 mr-2" />
                 {showForm ? 'Cancel' : 'Add New Menu Item'}
@@ -289,14 +299,14 @@ export default function AdminDashboard() {
             </div>
 
             {/* Search Bar */}
-            <div className="relative mb-6">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
+            <div className="relative max-w-md">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
               <input
                 type="text"
                 placeholder="Search menu items..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full pl-8 sm:pl-10 pr-4 py-2 sm:py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent text-sm"
               />
             </div>
           </div>
@@ -412,7 +422,7 @@ export default function AdminDashboard() {
                 </div>
 
                 {/* Checkboxes */}
-                <div className="flex items-center space-x-8">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-8 space-y-3 sm:space-y-0">
                   <label className="flex items-center space-x-2 cursor-pointer">
                     <input
                       type="checkbox"
@@ -443,7 +453,7 @@ export default function AdminDashboard() {
                 </div>
 
                 {/* Submit Buttons */}
-                <div className="flex justify-end space-x-4">
+                <div className="flex flex-col sm:flex-row sm:justify-end space-y-3 sm:space-y-0 sm:space-x-4">
                   <Button
                     type="button"
                     onClick={resetForm}
@@ -465,7 +475,7 @@ export default function AdminDashboard() {
           {/* Menu Items Table */}
           {loading ? (
             <div className="bg-white rounded-lg shadow-md p-12 text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-forest mx-auto"></div>
               <p className="mt-4 text-gray-600">Loading menu items...</p>
             </div>
           ) : filteredItems.length === 0 ? (
@@ -476,17 +486,18 @@ export default function AdminDashboard() {
             </div>
           ) : (
             <div className="bg-white rounded-lg shadow-md overflow-hidden">
-              <table className="w-full">
-                <thead className="bg-gray-50 border-b border-gray-200">
-                  <tr>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Image</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                    <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
-                  </tr>
-                </thead>
+              <div className="overflow-x-auto">
+                <table className="w-full min-w-[640px]">
+                  <thead className="bg-gray-50 border-b border-gray-200">
+                    <tr>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Image</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                    </tr>
+                  </thead>
                 <tbody className="divide-y divide-gray-200">
                   {filteredItems.map((item) => (
                     <motion.tr
@@ -538,7 +549,7 @@ export default function AdminDashboard() {
 
                       {/* Category */}
                       <td className="px-6 py-4">
-                        <span className="px-3 py-1 bg-blue-100 text-blue-700 text-sm font-medium rounded-full">
+                        <span className="px-3 py-1 bg-forest-light text-forest text-sm font-medium rounded-full">
                           {item.category_name}
                         </span>
                       </td>
@@ -566,7 +577,7 @@ export default function AdminDashboard() {
                         <div className="flex items-center space-x-2">
                           <button
                             onClick={() => handleEdit(item)}
-                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                            className="p-2 text-forest hover:bg-forest-light rounded-lg transition-colors"
                             title="Edit"
                           >
                             <Edit2 className="w-4 h-4" />
@@ -584,10 +595,22 @@ export default function AdminDashboard() {
                   ))}
                 </tbody>
               </table>
+              </div>
             </div>
           )}
         </div>
-      </main>
+
+        {/* Footer - Fixed at bottom */}
+        <div className="mt-auto bg-forest">
+          <div className="px-4 sm:px-6 py-6">
+            <div className="text-center">
+              <p className="text-sm text-gray-200">
+                Designed & Developed by <a href="https://infinitone.tech/" target="_blank" rel="noopener noreferrer" className="font-semibold text-white hover:text-gold transition-colors cursor-pointer">InfiniteOne</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

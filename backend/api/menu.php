@@ -8,12 +8,14 @@
  * DELETE /api/menu.php?id=1 - Delete menu item
  */
 
-header('Content-Type: application/json');
+// Enhanced CORS headers
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
-header('Access-Control-Allow-Headers: Content-Type');
+header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
+header('Access-Control-Allow-Credentials: false');
+header('Content-Type: application/json');
 
-// Handle preflight
+// Handle preflight OPTIONS request
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(200);
     exit();
@@ -197,13 +199,45 @@ function handleDelete($pdo) {
         return;
     }
     
-    $stmt = $pdo->prepare("DELETE FROM menu_items WHERE id = ?");
-    $stmt->execute([$id]);
-    
-    if ($stmt->rowCount() > 0) {
-        echo json_encode(['success' => true, 'message' => 'Item deleted']);
-    } else {
-        http_response_code(404);
-        echo json_encode(['error' => 'Item not found']);
+    try {
+        // Start transaction to ensure complete deletion
+        $pdo->beginTransaction();
+        
+        // Get item details before deletion (for image cleanup if needed)
+        $stmt = $pdo->prepare("SELECT image_url FROM menu_items WHERE id = ?");
+        $stmt->execute([$id]);
+        $item = $stmt->fetch();
+        
+        if (!$item) {
+            $pdo->rollBack();
+            http_response_code(404);
+            echo json_encode(['error' => 'Item not found']);
+            return;
+        }
+        
+        // Delete the menu item (this will completely remove it from database)
+        $deleteStmt = $pdo->prepare("DELETE FROM menu_items WHERE id = ?");
+        $deleteStmt->execute([$id]);
+        
+        // Commit transaction
+        $pdo->commit();
+        
+        // Optional: Clean up image file if it exists and is stored locally
+        if ($item['image_url'] && strpos($item['image_url'], '/uploads/') !== false) {
+            $imagePath = __DIR__ . '/../uploads/' . basename($item['image_url']);
+            if (file_exists($imagePath)) {
+                unlink($imagePath);
+            }
+        }
+        
+        echo json_encode([
+            'success' => true, 
+            'message' => 'Item completely deleted from database',
+            'deleted_id' => $id
+        ]);
+        
+    } catch (Exception $e) {
+        $pdo->rollBack();
+        throw $e;
     }
 }

@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Menu, X, ShoppingCart, LayoutDashboard, LogOut } from 'lucide-react';
-import { useCart } from '@/context/CartContext';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
+import { motion } from 'framer-motion';
+import { LayoutDashboard, LogOut, Menu, X } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,7 +11,6 @@ const Navbar = () => {
   const [isAdmin, setIsAdmin] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();
-  const { getCartCount } = useCart();
   const { toast } = useToast();
 
   // Check if user is logged in as admin
@@ -47,8 +45,7 @@ const Navbar = () => {
     { name: 'Home', path: '/' },
     { name: 'Menu', path: '/menu' },
     { name: 'About', path: '/about' },
-    { name: 'Order', path: '/order' },
-    { name: 'Contact', path: '/contact' }
+    { name: 'Contact', path: '/contact' },
   ];
 
   return (
@@ -59,19 +56,20 @@ const Navbar = () => {
         scrolled ? 'bg-forest shadow-lg' : 'bg-transparent'
       }`}
     >
-      <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-20">
-          <Link to="/" className="flex items-center space-x-3">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16 sm:h-20">
+          <Link to="/" className="flex items-center space-x-2 sm:space-x-3">
             <img
               src="/images/logo_bgreen_-removebg-preview.png"
               alt="BGREEN caterers logo"
-              className="w-12 h-12 md:w-16 md:h-16 object-contain"
+              className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 object-contain"
             />
             <motion.div
               whileHover={{ scale: 1.05 }}
-              className="text-2xl md:text-3xl font-bold text-gold"
+              className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-gold"
             >
-              BGREEN CATERERS
+              <span className="hidden sm:inline">BGREEN CATERERS</span>
+              <span className="sm:hidden">BGREEN</span>
             </motion.div>
           </Link>
 
@@ -89,7 +87,7 @@ const Navbar = () => {
             ))}
             
             {/* Admin Controls */}
-            {isAdmin ? (
+            {isAdmin && (
               <>
                 <Link to="/admin/dashboard">
                   <Button variant="outline" className="bg-blue-600 text-white border-blue-600 hover:bg-blue-700">
@@ -106,26 +104,15 @@ const Navbar = () => {
                   Logout
                 </Button>
               </>
-            ) : (
-              <Link to="/order" className="relative">
-                <Button variant="outline" className="bg-gold text-forest border-gold hover:bg-gold/90">
-                  <ShoppingCart className="w-4 h-4 mr-2" />
-                  Cart
-                  {getCartCount() > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                      {getCartCount()}
-                    </span>
-                  )}
-                </Button>
-              </Link>
             )}
           </div>
 
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden text-white"
+            className="md:hidden text-gold hover:text-white transition-colors duration-300 p-2"
+            aria-label="Toggle mobile menu"
           >
-            {isOpen ? <X size={28} /> : <Menu size={28} />}
+            {isOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
         </div>
 
@@ -134,49 +121,46 @@ const Navbar = () => {
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-forest pb-4"
+            className="md:hidden bg-forest border-t border-gold/20"
           >
-            {navLinks.map((link) => (
-              <Link
-                key={link.path}
-                to={link.path}
-                onClick={() => setIsOpen(false)}
-                className={`block py-3 px-4 text-black hover:text-gold transition-colors ${
-                  location.pathname === link.path ? 'text-gold font-semibold' : ''
-                }`}
-              >
-                {link.name}
-              </Link>
-            ))}
-            
-            {/* Mobile Admin Controls */}
-            {isAdmin ? (
-              <>
-                <Link to="/admin/dashboard" onClick={() => setIsOpen(false)} className="block px-4 py-3">
-                  <Button variant="outline" className="w-full bg-blue-600 text-white border-blue-600 hover:bg-blue-700">
-                    <LayoutDashboard className="w-4 h-4 mr-2" />
-                    Dashboard
-                  </Button>
+            <div className="py-2">
+              {navLinks.map((link) => (
+                <Link
+                  key={link.path}
+                  to={link.path}
+                  onClick={() => setIsOpen(false)}
+                  className={`block py-3 px-4 text-base font-medium transition-colors ${
+                    location.pathname === link.path 
+                      ? 'text-gold bg-gold/10 border-r-4 border-gold' 
+                      : 'text-white hover:text-gold hover:bg-gold/5'
+                  }`}
+                >
+                  {link.name}
                 </Link>
-                <div className="block px-4 py-3">
-                  <Button
-                    onClick={handleLogout}
-                    variant="outline"
-                    className="w-full bg-red-600 text-white border-red-600 hover:bg-red-700"
-                  >
-                    <LogOut className="w-4 h-4 mr-2" />
-                    Logout
-                  </Button>
+              ))}
+              
+              {/* Mobile Admin Controls */}
+              {isAdmin && (
+                <div className="border-t border-gold/20 pt-2 mt-2">
+                  <Link to="/admin/dashboard" onClick={() => setIsOpen(false)} className="block px-4 py-3">
+                    <Button variant="outline" className="w-full bg-blue-600 text-white border-blue-600 hover:bg-blue-700">
+                      <LayoutDashboard className="w-4 h-4 mr-2" />
+                      Dashboard
+                    </Button>
+                  </Link>
+                  <div className="block px-4 py-3">
+                    <Button
+                      onClick={handleLogout}
+                      variant="outline"
+                      className="w-full bg-red-600 text-white border-red-600 hover:bg-red-700"
+                    >
+                      <LogOut className="w-4 h-4 mr-2" />
+                      Logout
+                    </Button>
+                  </div>
                 </div>
-              </>
-            ) : (
-              <Link to="/order" onClick={() => setIsOpen(false)} className="block px-4 py-3">
-                <Button variant="outline" className="w-full bg-gold text-forest border-gold hover:bg-gold/90">
-                  <ShoppingCart className="w-4 h-4 mr-2" />
-                  Cart ({getCartCount()})
-                </Button>
-              </Link>
-            )}
+              )}
+            </div>
           </motion.div>
         )}
       </div>

@@ -26,10 +26,6 @@ export const API_ENDPOINTS = {
   // Upload API
   UPLOAD_IMAGE: `${API_BASE_URL}/upload.php`,
   
-  // Order APIs
-  CREATE_ORDER: `${API_BASE_URL}/orders.php`,
-  GET_ORDER: (orderId) => `${API_BASE_URL}/orders.php?id=${orderId}`,
-  
   // Contact API
   SUBMIT_CONTACT: `${API_BASE_URL}/contact.php`,
 };

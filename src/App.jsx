@@ -1,18 +1,15 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
-import { Helmet } from 'react-helmet';
+import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
 import ScrollToTop from '@/components/ScrollToTop';
+import { Toaster } from '@/components/ui/toaster';
+import About from '@/pages/About';
+import AdminDashboard from '@/pages/AdminDashboard';
+import AdminLogin from '@/pages/AdminLogin';
+import Contact from '@/pages/Contact';
 import Home from '@/pages/Home';
 import Menu from '@/pages/Menu';
-import About from '@/pages/About';
-import Order from '@/pages/Order';
-import Contact from '@/pages/Contact';
-import AdminLogin from '@/pages/AdminLogin';
-import AdminDashboard from '@/pages/AdminDashboard';
-import Footer from '@/components/Footer';
-import { Toaster } from '@/components/ui/toaster';
-import { CartProvider } from '@/context/CartContext';
+import { Helmet } from 'react-helmet';
+import { Route, BrowserRouter as Router, Routes, useLocation } from 'react-router-dom';
 
 function AppContent() {
   const location = useLocation();
@@ -32,7 +29,6 @@ function AppContent() {
             <Route path="/" element={<Home />} />
             <Route path="/menu" element={<Menu />} />
             <Route path="/about" element={<About />} />
-            <Route path="/order" element={<Order />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/admin" element={<AdminLogin />} />
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
@@ -47,11 +43,9 @@ function AppContent() {
 
 function App() {
   return (
-    <CartProvider>
-      <Router>
-        <AppContent />
-      </Router>
-    </CartProvider>
+    <Router>
+      <AppContent />
+    </Router>
   );
 }
 

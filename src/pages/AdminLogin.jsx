@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { motion } from 'framer-motion';
-import { LogIn, Eye, EyeOff } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
+import { API_ENDPOINTS } from '@/config/api';
+import { motion } from 'framer-motion';
+import { Eye, EyeOff } from 'lucide-react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 export default function AdminLogin() {
@@ -19,7 +19,7 @@ export default function AdminLogin() {
     setLoading(true);
 
     try {
-      const response = await fetch('http://localhost:8000/api/auth.php', {
+      const response = await fetch(API_ENDPOINTS.LOGIN, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -71,27 +71,27 @@ export default function AdminLogin() {
         {/* Login Card */}
         <div className="bg-white rounded-lg shadow-sm border border-gray-200">
           {/* Logo and Header */}
-          <div className="pt-10 pb-6 px-10 text-center">
-            <div className="w-20 h-20 bg-white rounded-full mx-auto mb-4 flex items-center justify-center border-4 border-gray-200 overflow-hidden">
+          <div className="pt-8 sm:pt-10 pb-4 sm:pb-6 px-6 sm:px-10 text-center">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 bg-white rounded-full mx-auto mb-3 sm:mb-4 flex items-center justify-center border-4 border-forest overflow-hidden">
               <img
                 src="/images/logo_bgreen_-removebg-preview.png"
                 alt="B Green Logo"
-                className="w-16 h-16 object-contain"
+                className="w-12 h-12 sm:w-16 sm:h-16 object-contain"
               />
             </div>
-            <h1 className="text-2xl font-bold text-[#2c5aa0] mb-3">Admin Login</h1>
-            <p className="text-gray-600 text-sm leading-relaxed">
+            <h1 className="text-xl sm:text-2xl font-bold text-forest mb-2 sm:mb-3">Admin Login</h1>
+            <p className="text-gray-600 text-xs sm:text-sm leading-relaxed">
               Enter your credentials to access the<br />admin dashboard
             </p>
           </div>
 
           {/* Login Form */}
-          <div className="px-10 pb-8">
+          <div className="px-6 sm:px-10 pb-6 sm:pb-8">
 
-            <form onSubmit={handleLogin} className="space-y-4">
+            <form onSubmit={handleLogin} className="space-y-3 sm:space-y-4">
               {/* Email */}
               <div>
-                <label className="block text-sm font-normal text-gray-700 mb-2">
+                <label className="block text-xs sm:text-sm font-normal text-gray-700 mb-1.5 sm:mb-2">
                   Email Address
                 </label>
                 <input
@@ -99,14 +99,14 @@ export default function AdminLogin() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 text-gray-900 text-sm"
+                  className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-forest focus:border-forest text-gray-900 text-sm"
                   placeholder=""
                 />
               </div>
 
               {/* Password */}
               <div>
-                <label className="block text-sm font-normal text-gray-700 mb-2">
+                <label className="block text-xs sm:text-sm font-normal text-gray-700 mb-1.5 sm:mb-2">
                   Password
                 </label>
                 <div className="relative">
@@ -115,7 +115,7 @@ export default function AdminLogin() {
                     required
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 pr-10 text-gray-900 text-sm"
+                    className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-md focus:outline-none focus:ring-1 focus:ring-forest focus:border-forest pr-10 text-gray-900 text-sm"
                     placeholder=""
                   />
                   <button
@@ -135,11 +135,11 @@ export default function AdminLogin() {
                     type="checkbox"
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
-                    className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-0"
+                    className="w-3 h-3 sm:w-4 sm:h-4 text-forest border-gray-300 rounded focus:ring-0"
                   />
-                  <span className="ml-2 text-sm text-gray-700">Remember me</span>
+                  <span className="ml-2 text-xs sm:text-sm text-gray-700">Remember me</span>
                 </label>
-                <a href="#" className="text-sm text-[#2c5aa0] hover:underline">
+                <a href="#" className="text-xs sm:text-sm text-forest hover:underline">
                   Forgot password?
                 </a>
               </div>
@@ -148,7 +148,7 @@ export default function AdminLogin() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-[#2c5aa0] hover:bg-[#244a8a] text-white py-3 text-base font-medium rounded-full transition-colors mt-4 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-full bg-forest hover:bg-light-green text-white py-2.5 sm:py-3 text-sm sm:text-base font-medium rounded-full transition-colors mt-3 sm:mt-4 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? (
                   <div className="flex items-center justify-center">
@@ -162,24 +162,24 @@ export default function AdminLogin() {
             </form>
 
             {/* Divider */}
-            <div className="relative my-8">
+            <div className="relative my-6 sm:my-8">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-gray-200"></div>
               </div>
             </div>
 
             {/* Support Text */}
-            <p className="text-center text-sm text-gray-500">
+            <p className="text-center text-xs sm:text-sm text-gray-500">
               For assistance, contact the administrator
             </p>
           </div>
         </div>
 
         {/* Back to Website */}
-        <div className="text-center mt-8">
+        <div className="text-center mt-6 sm:mt-8">
           <button
             onClick={() => navigate('/')}
-            className="text-gray-500 hover:text-gray-700 transition-colors text-xs font-normal inline-flex items-center"
+            className="text-gray-500 hover:text-gray-700 transition-colors text-xs sm:text-sm font-normal inline-flex items-center"
           >
             <span className="mr-1">←</span> Back to Website
           </button>

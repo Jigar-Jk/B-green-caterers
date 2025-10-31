@@ -39,14 +39,33 @@ CREATE TABLE IF NOT EXISTS menu_items (
     INDEX idx_available (is_available)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- Insert default categories
-INSERT INTO menu_categories (name, slug, description, display_order) VALUES
-('Starters', 'starters', 'Appetizers and starters', 1),
-('Chicken', 'chicken', 'Chicken dishes', 2),
-('Mutton', 'mutton', 'Mutton specialties', 3),
-('Seafood', 'seafood', 'Fresh seafood dishes', 4),
-('Combos', 'combos', 'Combination meals', 5),
-('Desserts', 'desserts', 'Sweet endings', 6);
+-- Insert default categories (only if they don't exist)
+INSERT IGNORE INTO menu_categories (name, slug, description, display_order) VALUES
+('Degs', 'degs', 'Traditional degs dishes', 1),
+('Starters', 'starters', 'Appetizers and starters', 2),
+('Chicken', 'chicken', 'Chicken dishes', 3),
+('Mutton', 'mutton', 'Mutton specialties', 4),
+('Seafood', 'seafood', 'Fresh seafood dishes', 5),
+('Combos', 'combos', 'Combination meals', 6),
+('Desserts', 'desserts', 'Sweet endings', 7);
+
+-- Admin users table for authentication
+CREATE TABLE IF NOT EXISTS admin_users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password_hash VARCHAR(255) NOT NULL,
+    name VARCHAR(100) NOT NULL,
+    is_active BOOLEAN DEFAULT TRUE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    last_login TIMESTAMP NULL,
+    INDEX idx_email (email),
+    INDEX idx_active (is_active)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- Insert default admin user (password: admin123)
+INSERT IGNORE INTO admin_users (email, password_hash, name) VALUES
+('admin@bgcaterers.com', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'Admin User');
 
 -- Admin users table
 CREATE TABLE IF NOT EXISTS admin_users (

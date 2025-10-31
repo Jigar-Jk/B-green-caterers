@@ -1,10 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import { Helmet } from 'react-helmet';
-import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
-import { ChefHat, Award, Clock, Leaf } from 'lucide-react';
-import { Button } from '@/components/ui/button';
 import ImageLightbox from '@/components/ImageLightbox';
+import { Button } from '@/components/ui/button';
+import { motion } from 'framer-motion';
+import { Award, ChefHat, Clock, Leaf } from 'lucide-react';
+import { useState } from 'react';
+import { Helmet } from 'react-helmet';
+import { Link } from 'react-router-dom';
 
 // (headline animation removed) show static headline text
 
@@ -25,7 +25,7 @@ const Home = () => {
         <meta name="description" content="Experience bold flavors with caterers premium non-veg cuisine. Fresh ingredients, expert preparation, and unforgettable taste." />
       </Helmet>
 
-      <section className="relative h-screen flex items-center justify-center overflow-hidden">
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden w-full">
         <div className="absolute inset-0 bg-gradient-to-br from-forest via-[#0a1f14] to-black">
           <img 
             className="w-full h-full object-cover opacity-40" 
@@ -42,23 +42,23 @@ const Home = () => {
           <div className="leaf-particle" style={{ left: '50%', top: '70%', animationDelay: '7s' }}>🍃</div>
         </div>
 
-        <div className="relative z-10 text-center px-4 max-w-5xl">
+        <div className="relative z-10 text-center px-4 sm:px-6 md:px-8 max-w-5xl w-full">
             <motion.h1
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8 }}
-              className="text-5xl md:text-7xl font-bold text-forest mb-6"
+              className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-bold text-forest mb-4 sm:mb-6"
             >
-                <span className="text-forest text-5xl md:text-7xl">B Green Caterers</span>
+                <span className="text-forest text-4xl sm:text-5xl md:text-6xl lg:text-7xl">B Green Caterers</span>
               <br />
-              <span className="text-3xl md:text-5xl text-forest">Bold Flavours, Naturally Crafted</span>
+              <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-forest">Bold Flavours, Naturally Crafted</span>
             </motion.h1>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.3 }}
-            className="text-xl md:text-2xl text-forest mb-8"
+            className="text-lg sm:text-xl md:text-2xl text-forest mb-6 sm:mb-8 px-2"
           >
             Experience premium non-veg cuisine with fresh ingredients and rich flavors
           </motion.p>
@@ -67,16 +67,16 @@ const Home = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
-            className="flex flex-col sm:flex-row gap-4 justify-center"
+            className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center w-full px-4"
           >
-            <Link to="/order">
-              <Button className="bg-gold text-forest hover:bg-gold/90 text-lg px-8 py-6 transform hover:scale-105 transition-all">
-                Order Now
+            <Link to="/menu" className="w-full sm:w-auto">
+              <Button className="bg-gold text-forest hover:bg-gold/90 text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 transform hover:scale-105 transition-all w-full sm:w-auto">
+                Explore Menu
               </Button>
             </Link>
-            <Link to="/menu">
-              <Button variant="outline" className="border-2 border-gold text-white hover:bg-gold hover:text-forest text-lg px-8 py-6 transform hover:scale-105 transition-all">
-                Explore Menu
+            <Link to="/about" className="w-full sm:w-auto">
+              <Button variant="outline" className="border-2 border-gold text-white hover:bg-gold hover:text-forest text-base sm:text-lg px-6 sm:px-8 py-4 sm:py-6 transform hover:scale-105 transition-all w-full sm:w-auto">
+                About Us
               </Button>
             </Link>
           </motion.div>
@@ -96,19 +96,19 @@ const Home = () => {
         </motion.div>
       </section>
 
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-4">
+      <section className="py-12 sm:py-16 md:py-20 bg-white">
+        <div className="container mx-auto px-4 sm:px-6 md:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-16"
+            className="text-center mb-12 sm:mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-bold text-forest mb-4">Why Choose B Green Caterers?</h2>
-            <p className="text-xl text-gray-600">Premium quality meets exceptional taste</p>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-forest mb-4">Why Choose B Green Caterers?</h2>
+            <p className="text-lg sm:text-xl text-gray-600 px-4">Premium quality meets exceptional taste</p>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
             {features.map((feature, index) => (
               <motion.div
                 key={index}
@@ -117,11 +117,11 @@ const Home = () => {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
                 whileHover={{ y: -10, scale: 1.05 }}
-                className="bg-cream p-8 rounded-lg shadow-lg text-center border-2 border-transparent hover:border-gold transition-all"
+                className="bg-cream p-6 sm:p-8 rounded-lg shadow-lg text-center border-2 border-transparent hover:border-gold transition-all"
               >
-                <feature.icon className="w-16 h-16 mx-auto mb-4 text-forest" />
-                <h3 className="text-xl font-bold text-forest mb-2">{feature.title}</h3>
-                <p className="text-gray-600">{feature.description}</p>
+                <feature.icon className="w-12 h-12 sm:w-16 sm:h-16 mx-auto mb-4 text-forest" />
+                <h3 className="text-lg sm:text-xl font-bold text-forest mb-2">{feature.title}</h3>
+                <p className="text-sm sm:text-base text-gray-600">{feature.description}</p>
               </motion.div>
             ))}
           </div>

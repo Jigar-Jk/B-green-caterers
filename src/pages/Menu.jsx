@@ -1,19 +1,17 @@
-import React, { useState, useEffect, useRef } from 'react';
-import { Helmet } from 'react-helmet';
-import { motion } from 'framer-motion';
-import { Flame, Star, Plus, X, Search } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { useCart } from '@/context/CartContext';
-import { useToast } from '@/components/ui/use-toast';
 import ImageLightbox from '@/components/ImageLightbox';
+import { Button } from '@/components/ui/button';
+import { useToast } from '@/components/ui/use-toast';
 import { api, API_ENDPOINTS } from '@/config/api';
+import { motion } from 'framer-motion';
+import { Flame, Search, Star, X } from 'lucide-react';
+import { useEffect, useRef, useState } from 'react';
+import { Helmet } from 'react-helmet';
 
 const Menu = () => {
-  const [activeCategory, setActiveCategory] = useState('All');
+  const [activeCategory, setActiveCategory] = useState('Degs');
   const [categories, setCategories] = useState(['All']);
   const [menuItems, setMenuItems] = useState([]);
   const [loading, setLoading] = useState(true);
-  const { addToCart } = useCart();
   const { toast } = useToast();
   const [lightboxImage, setLightboxImage] = useState(null);
 
@@ -64,9 +62,15 @@ const Menu = () => {
         is_available: item.is_available === 1
       })).filter(item => item.is_available)); // Only show available items
       
-      // Set categories
-      const categoryNames = categoriesData.map(cat => cat.name);
+      // Set categories in proper order (Degs first)
+      const sortedCategories = categoriesData.sort((a, b) => a.display_order - b.display_order);
+      const categoryNames = sortedCategories.map(cat => cat.name);
       setCategories(['All', ...categoryNames]);
+      
+      // Always set default active category to 'Degs' if it exists
+      if (categoryNames.includes('Degs')) {
+        setActiveCategory('Degs');
+      }
       
     } catch (error) {
       toast({
@@ -216,9 +220,19 @@ const Menu = () => {
   };
 
   const getImageSrc = (item) => {
-    // Use image from database
-    if (item.image) {
-      return `/images/${item.image}`;
+    // Use image from database (check both image and image_url for backward compatibility)
+    if (item.image_url && item.image_url !== '') {
+      const imagePath = `/images/${item.image_url}`;
+      // Check if it's a valid image name (not empty or undefined)
+      if (item.image_url.length > 0) {
+        return imagePath;
+      }
+    }
+    if (item.image && item.image !== '') {
+      const imagePath = `/images/${item.image}`;
+      if (item.image.length > 0) {
+        return imagePath;
+      }
     }
     // Fallback to old mapping for backward compatibility
     const filename = publicImageMap[item.id];
@@ -267,14 +281,6 @@ const Menu = () => {
     ).toLowerCase().includes(q));
   }
 
-  const handleAddToCart = (item) => {
-    addToCart(item);
-    toast({
-      title: "Added to cart!",
-      description: `${item.name} has been added to your cart.`,
-    });
-  };
-
   const getSpiceIndicator = (level) => {
     return Array(level).fill(0).map((_, i) => (
       <Flame key={i} className="w-4 h-4 text-red-500 fill-red-500" />
@@ -288,15 +294,15 @@ const Menu = () => {
         <meta name="description" content="Browse our extensive menu of premium non-veg dishes including tandoori, biryani, seafood, and more. Fresh ingredients, bold flavors." />
       </Helmet>
 
-      <div className="pt-24 pb-16 bg-cream min-h-screen">
-        <div className="container mx-auto px-4">
+      <div className="pt-20 sm:pt-24 pb-12 sm:pb-16 bg-cream min-h-screen">
+        <div className="container mx-auto px-4 sm:px-6 md:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-12"
+            className="text-center mb-8 sm:mb-12"
           >
-            <h1 className="text-5xl md:text-6xl font-bold text-forest mb-4">Our Menu</h1>
-            <p className="text-xl text-gray-600">Discover bold flavors crafted with passion</p>
+            <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-forest mb-4">Our Menu</h1>
+            <p className="text-lg sm:text-xl text-gray-600 px-4">Discover bold flavors crafted with passion</p>
           </motion.div>
 
           {/* Animated search bar */}
@@ -304,15 +310,14 @@ const Menu = () => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.05 }}
-            className="flex justify-center mb-8 px-4"
+            className="flex justify-center mb-6 sm:mb-8 px-4"
           >
               <motion.div
-              className="relative mx-auto"
-              style={{ width: '360px' }}
+              className="relative w-full max-w-md sm:max-w-lg md:max-w-xl"
               // Only animate width to avoid adding a rectangle-like background (no scale/boxShadow)
               animate={(isSearchFocused || (searchQuery && searchQuery.trim() !== ''))
-                ? { width: '520px' }
-                : (autoExpanded ? { width: '520px' } : { width: '360px' })
+                ? { maxWidth: '520px' }
+                : (autoExpanded ? { maxWidth: '520px' } : { maxWidth: '360px' })
               }
               transition={{ type: 'spring', stiffness: 300, damping: 25, duration: 0.25 }}
             >
@@ -328,7 +333,7 @@ const Menu = () => {
                 onBlur={() => setIsSearchFocused(false)}
                 placeholder="Search dishes, e.g. biryani, tandoori, prawns..."
                 aria-label="Search menu items"
-                className="w-full pl-11 pr-10 py-2 text-sm rounded-full border border-gray-200 bg-white text-gray-800 placeholder-gray-400 shadow-sm focus:outline-none focus:ring-0"
+                className="w-full pl-11 pr-10 py-3 text-sm rounded-full border border-gray-200 bg-white text-gray-800 placeholder-gray-400 shadow-sm focus:outline-none focus:ring-0"
               />
 
               {searchQuery ? (
@@ -347,14 +352,14 @@ const Menu = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="flex flex-wrap justify-center gap-4 mb-12"
+            className="flex flex-wrap justify-center gap-2 sm:gap-4 mb-8 sm:mb-12 px-2"
           >
             {categories.map((category) => (
               <Button
                 key={category}
                 onClick={() => setActiveCategory(category)}
                 variant={activeCategory === category ? 'default' : 'outline'}
-                className={`${
+                className={`text-sm sm:text-base px-3 sm:px-4 py-2 sm:py-2 ${
                   activeCategory === category
                     ? 'bg-forest text-white hover:bg-forest/90'
                     : 'border-forest text-forest hover:bg-forest hover:text-white'
@@ -377,7 +382,7 @@ const Menu = () => {
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8">
               {filteredItems.map((item, index) => (
               <motion.div
                 key={item.id}
@@ -387,14 +392,17 @@ const Menu = () => {
                 whileHover={{ y: -10 }}
                 className="bg-white rounded-lg shadow-lg overflow-hidden border-2 border-transparent hover:border-gold transition-all group"
               >
-                <div className="relative h-64 overflow-hidden cursor-pointer" onClick={() => setLightboxImage({ src: getImageSrc(item), alt: item.name })}>
+                <div className="relative h-48 sm:h-56 md:h-64 overflow-hidden cursor-pointer" onClick={() => setLightboxImage({ src: getImageSrc(item), alt: item.name })}>
                   <img
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     alt={item.name}
                     src={getImageSrc(item)}
+                    onError={(e) => {
+                      e.target.src = '/images/logo_bgreen_-removebg-preview.png';
+                    }}
                     loading="lazy"
                     decoding="async"
-                    fetchPriority="low"
+                    fetchpriority="low"
                     style={{ willChange: 'transform' }}
                   />
                   <div className="absolute top-4 right-4 flex gap-2">
@@ -411,27 +419,19 @@ const Menu = () => {
                   </div>
                 </div>
 
-                <div className="p-6">
+                <div className="p-4 sm:p-6">
                   <div className="flex justify-between items-start mb-2">
-                    <h3 className="text-2xl font-bold text-forest">{highlightText(item.name, searchQuery)}</h3>
-                    <span className="text-2xl font-bold text-gold">₹{item.price.toFixed ? item.price.toFixed(2) : item.price}</span>
+                    <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-forest pr-2">{highlightText(item.name, searchQuery)}</h3>
+                    <span className="text-lg sm:text-xl md:text-2xl font-bold text-gold whitespace-nowrap">₹{item.price.toFixed ? item.price.toFixed(2) : item.price}</span>
                   </div>
 
-                  <p className="text-gray-600 mb-4">{highlightText(item.description, searchQuery)}</p>
+                  <p className="text-gray-600 mb-4 text-sm sm:text-base">{highlightText(item.description, searchQuery)}</p>
 
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-1">
                       {item.spiceLevel > 0 && getSpiceIndicator(item.spiceLevel)}
-                      {item.spiceLevel === 0 && <span className="text-sm text-gray-500">No spice</span>}
+                      {item.spiceLevel === 0 && <span className="text-xs sm:text-sm text-gray-500">No spice</span>}
                     </div>
-
-                    <Button
-                      onClick={() => handleAddToCart(item)}
-                      className="bg-forest text-white hover:bg-forest/90 transform hover:scale-105 transition-all"
-                    >
-                      <Plus className="w-4 h-4 mr-2" />
-                      Add to Cart
-                    </Button>
                   </div>
                 </div>
               </motion.div>
