@@ -78,8 +78,9 @@ const Contact = () => {
                   <Mail className="w-8 h-8 text-forest flex-shrink-0 mt-1" />
                   <div>
                     <h3 className="text-xl font-bold text-forest mb-2">Email Us</h3>
-                    <p className="text-gray-700">info@caterers.com</p>
-                    <p className="text-gray-700">reservations@caterers.com</p>
+                    <p className="text-gray-700">
+                      <a href="mailto:bgreencaterers@gmail.com" className="text-forest hover:text-gold transition-colors font-semibold">bgreencaterers@gmail.com</a>
+                    </p>
                   </div>
                 </div>
               </div>

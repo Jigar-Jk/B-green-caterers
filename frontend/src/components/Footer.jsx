@@ -56,7 +56,7 @@ const Footer = () => {
               </li>
               <li className="flex items-center justify-center sm:justify-start space-x-2">
                 <Mail className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
-                <span className="text-sm sm:text-base">info@caterers.com</span>
+                <a href="mailto:bgreencaterers@gmail.com" className="text-sm sm:text-base hover:text-gold transition-colors">bgreencaterers@gmail.com</a>
               </li>
               <li className="flex items-start justify-center sm:justify-start space-x-2">
                 <MapPin className="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0 mt-0.5" />
@@ -74,10 +74,10 @@ const Footer = () => {
           >
             <h4 className="text-lg font-semibold mb-3 sm:mb-4 text-gold">Follow Us</h4>
             <div className="flex justify-center sm:justify-start space-x-4">
-              <a href="#" className="hover:text-gold transition-colors transform hover:scale-110">
+              <a href="https://www.facebook.com/bgreencaterers" target="_blank" rel="noopener noreferrer" className="hover:text-gold transition-colors transform hover:scale-110" title="Follow us on Facebook">
                 <Facebook className="w-5 h-5 sm:w-6 sm:h-6" />
               </a>
-              <a href="#" className="hover:text-gold transition-colors transform hover:scale-110">
+              <a href="https://www.instagram.com/bgreencaterers/" target="_blank" rel="noopener noreferrer" className="hover:text-gold transition-colors transform hover:scale-110" title="Follow us on Instagram">
                 <Instagram className="w-5 h-5 sm:w-6 sm:h-6" />
               </a>
               <a href="#" className="hover:text-gold transition-colors transform hover:scale-110">
