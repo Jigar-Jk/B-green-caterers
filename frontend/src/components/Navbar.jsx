@@ -44,16 +44,24 @@ const Navbar = () => {
   const navLinks = [
     { name: 'Home', path: '/' },
     { name: 'Menu', path: '/menu' },
+    { name: 'Gallery', path: '/gallery' },
     { name: 'About', path: '/about' },
     { name: 'Contact', path: '/contact' },
   ];
+
+  // Check if current page is Gallery
+  const isGalleryPage = location.pathname === '/gallery';
 
   return (
     <motion.nav
       initial={{ y: -100 }}
       animate={{ y: 0 }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        scrolled ? 'bg-forest shadow-lg' : 'bg-transparent'
+        isGalleryPage 
+          ? 'bg-forest shadow-lg' 
+          : scrolled 
+            ? 'bg-forest shadow-lg' 
+            : 'bg-transparent'
       }`}
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -78,7 +86,11 @@ const Navbar = () => {
               <Link
                 key={link.path}
                 to={link.path}
-                className={`text-black hover:text-gold transition-colors duration-300 ${
+                className={`${
+                  isGalleryPage 
+                    ? 'text-white hover:text-gold' 
+                    : 'text-black hover:text-gold'
+                } transition-colors duration-300 ${
                   location.pathname === link.path ? 'text-gold font-semibold' : ''
                 }`}
               >
@@ -109,7 +121,11 @@ const Navbar = () => {
 
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden text-gold hover:text-white transition-colors duration-300 p-2"
+            className={`md:hidden transition-colors duration-300 p-2 ${
+              isGalleryPage 
+                ? 'text-white hover:text-gold' 
+                : 'text-gold hover:text-white'
+            }`}
             aria-label="Toggle mobile menu"
           >
             {isOpen ? <X size={24} /> : <Menu size={24} />}

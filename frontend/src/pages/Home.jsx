@@ -1,5 +1,4 @@
 import ImageLightbox from '@/components/ImageLightbox';
-import YouTubeSection from '@/components/YouTubeSection';
 import { Button } from '@/components/ui/button';
 import { motion } from 'framer-motion';
 import { Award, ChefHat, Clock, Leaf } from 'lucide-react';
@@ -128,8 +127,6 @@ const Home = () => {
           </div>
         </div>
       </section>
-
-      <YouTubeSection />
 
       <section className="py-12 sm:py-16 md:py-20 gradient-green">
         <div className="container mx-auto px-4 sm:px-6 md:px-8">

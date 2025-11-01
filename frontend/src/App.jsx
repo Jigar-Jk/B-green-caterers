@@ -6,6 +6,7 @@ import About from '@/pages/About';
 import AdminDashboard from '@/pages/AdminDashboard';
 import AdminLogin from '@/pages/AdminLogin';
 import Contact from '@/pages/Contact';
+import Gallery from '@/pages/Gallery';
 import Home from '@/pages/Home';
 import Menu from '@/pages/Menu';
 import { Helmet } from 'react-helmet';
@@ -28,6 +29,7 @@ function AppContent() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/menu" element={<Menu />} />
+            <Route path="/gallery" element={<Gallery />} />
             <Route path="/about" element={<About />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/admin" element={<AdminLogin />} />
