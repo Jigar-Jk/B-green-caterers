@@ -1,0 +1,19 @@
+DirectoryIndex index.php
+
+<IfModule mod_rewrite.c>
+  # Turn off rewrite inside this folder so API PHP files are served directly
+  RewriteEngine Off
+</IfModule>
+
+# Enable PHP execution
+AddHandler application/x-httpd-php .php
+
+# Set proper CORS headers for API
+<IfModule mod_headers.c>
+    Header always set Access-Control-Allow-Origin "*"
+    Header always set Access-Control-Allow-Methods "GET, POST, PUT, DELETE, OPTIONS"
+    Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
+    Header always set Access-Control-Allow-Credentials "false"
+</IfModule>
+
+# Recommended: keep index.php as the directory index for this folder

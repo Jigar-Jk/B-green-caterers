@@ -1,0 +1,121 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --forest-green: #0b5b2b;
+    --light-green: #2d8659;
+    --olive-green: #6b8e23;
+    --gold: #d4af37;
+    --cream: #faf8f3;
+    --dark-bg: #0a1f14;
+  }
+  
+  html {
+    @apply h-full;
+  }
+  
+  body {
+    @apply text-gray-900 font-sans antialiased h-full m-0 p-0 overflow-x-hidden;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  }
+
+  #root {
+    @apply min-h-full;
+  }
+
+  * {
+    scroll-behavior: smooth;
+  }
+
+  /* Prevent horizontal scroll and gaps */
+  body, html {
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+}
+
+@layer utilities {
+  .text-forest {
+    color: var(--forest-green);
+  }
+  
+  .bg-forest {
+    background-color: var(--forest-green);
+  }
+  
+  .text-gold {
+    color: var(--gold);
+  }
+  
+  .bg-gold {
+    background-color: var(--gold);
+  }
+
+  /* Darker gold variant for headlines */
+  .text-gold-dark {
+    color: #b8860b; /* darker gold (goldenrod-like) */
+  }
+  
+  /* Light green utility matching --light-green */
+  .text-light-green {
+    color: var(--light-green);
+  }
+  
+  .bg-light-green {
+    background-color: var(--light-green);
+  }
+  
+  .hover\:bg-light-green:hover {
+    background-color: var(--light-green);
+  }
+  
+  .bg-forest-light {
+    background-color: #e8f5e8;
+  }
+  
+  .hover\:bg-forest-light:hover {
+    background-color: #e8f5e8;
+  }
+  
+  .gradient-green {
+    background: linear-gradient(135deg, var(--forest-green) 0%, var(--light-green) 100%);
+  }
+}
+
+.leaf-particle {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  opacity: 0.3;
+  animation: float 15s infinite ease-in-out;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-100px) rotate(180deg);
+  }
+}
+
+.steam-effect {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(ellipse at center, rgba(255,255,255,0.1) 0%, transparent 70%);
+  animation: steam 8s infinite ease-in-out;
+}
+
+@keyframes steam {
+  0%, 100% {
+    opacity: 0.3;
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    opacity: 0.6;
+    transform: translateY(-50px) scale(1.1);
+  }
+}
