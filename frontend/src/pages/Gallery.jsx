@@ -14,7 +14,7 @@ const Gallery = () => {
   const playerRef = useRef(null);
   const carouselIntervalRef = useRef(null);
 
-  const API_KEY = 'AIzaSyCvypX2_-vfY44UGTZjyElb_rAO5JArjvM';
+  const API_KEY = 'AIzaSyCfMUKRuBAcHUwqW6n4K_o1exGG0SApyZc';
 
   useEffect(() => {
     fetchYouTubeVideos();
@@ -38,89 +38,71 @@ const Gallery = () => {
   const fetchYouTubeVideos = async () => {
     try {
       setLoading(true);
+      setError(null);
 
-      // B Green Caterers Channel ID (from your YouTube channel)
-      const BGREEN_CHANNEL_ID = 'UCzCBa8g1ls36Eeh61HmG5RA';
-
-      console.log('Fetching videos with API key:', API_KEY);
-      console.log('Channel ID:', BGREEN_CHANNEL_ID);
-
-      // Method 1: Try channel uploads playlist (more reliable)
-      try {
-        const channelInfoResponse = await fetch(
-          `https://www.googleapis.com/youtube/v3/channels?key=${API_KEY}&id=${BGREEN_CHANNEL_ID}&part=contentDetails,snippet`
-        );
-        
-        console.log('Channel info response status:', channelInfoResponse.status);
-        
-        if (channelInfoResponse.ok) {
-          const channelInfo = await channelInfoResponse.json();
-          console.log('Channel info:', channelInfo);
-          
-          const uploadsPlaylistId = channelInfo.items[0]?.contentDetails?.relatedPlaylists?.uploads;
-          console.log('Uploads playlist ID:', uploadsPlaylistId);
-          
-          if (uploadsPlaylistId) {
-            const playlistResponse = await fetch(
-              `https://www.googleapis.com/youtube/v3/playlistItems?key=${API_KEY}&playlistId=${uploadsPlaylistId}&part=snippet&maxResults=50`
-            );
-            
-            console.log('Playlist response status:', playlistResponse.status);
-            
-            if (playlistResponse.ok) {
-              const playlistData = await playlistResponse.json();
-              console.log('Playlist data:', playlistData);
-              
-              // Convert playlist items to search format
-              const convertedVideos = playlistData.items.map(item => ({
-                id: { videoId: item.snippet.resourceId.videoId },
-                snippet: item.snippet
-              }));
-              
-              console.log('Converted videos:', convertedVideos.length);
-              setVideos(convertedVideos);
-              setLoading(false);
-              return;
-            } else {
-              const errorData = await playlistResponse.json();
-              console.error('Playlist API error:', errorData);
-            }
-          }
-        } else {
-          const errorData = await channelInfoResponse.json();
-          console.error('Channel info API error:', errorData);
-        }
-      } catch (playlistError) {
-        console.error('Playlist method failed:', playlistError);
+      const CHANNEL_HANDLE = 'bgreencaterers';
+      
+      // Step 1: Search for channel by handle
+      const searchUrl = `https://www.googleapis.com/youtube/v3/search?part=snippet&type=channel&q=${CHANNEL_HANDLE}&key=${API_KEY}`;
+      const searchResponse = await fetch(searchUrl);
+      
+      if (!searchResponse.ok) {
+        const errorData = await searchResponse.json();
+        throw new Error(errorData.error?.message || 'Failed to search for channel');
       }
-
-      // Method 2: Try direct video search as fallback
-      const videosResponse = await fetch(
-        `https://www.googleapis.com/youtube/v3/search?key=${API_KEY}&channelId=${BGREEN_CHANNEL_ID}&part=snippet,id&order=date&maxResults=50&type=video`
-      );
-
-      console.log('Search response status:', videosResponse.status);
-
-      if (videosResponse.ok) {
-        const videosData = await videosResponse.json();
-        console.log('Search videos data:', videosData);
-        
-        if (videosData.items && videosData.items.length > 0) {
-          setVideos(videosData.items);
-          setLoading(false);
-          return;
-        }
-      } else {
-        const errorData = await videosResponse.json();
-        console.error('Search API error:', errorData);
+      
+      const searchData = await searchResponse.json();
+      
+      if (!searchData.items || searchData.items.length === 0) {
+        throw new Error('Channel not found');
       }
-
-      // API failed - no videos to show
-      console.error('Unable to fetch B Green Caterers videos - API key may be invalid or quota exceeded');
-      setError('Unable to load B Green Caterers videos. Please check YouTube API configuration.');
+      
+      const channelId = searchData.items[0].id.channelId;
+      
+      // Step 2: Get channel's uploads playlist ID
+      const channelUrl = `https://www.googleapis.com/youtube/v3/channels?part=contentDetails&id=${channelId}&key=${API_KEY}`;
+      const channelResponse = await fetch(channelUrl);
+      
+      if (!channelResponse.ok) {
+        const errorData = await channelResponse.json();
+        throw new Error(errorData.error?.message || 'Failed to get channel details');
+      }
+      
+      const channelData = await channelResponse.json();
+      const uploadsPlaylistId = channelData.items[0]?.contentDetails?.relatedPlaylists?.uploads;
+      
+      if (!uploadsPlaylistId) {
+        throw new Error('Could not find uploads playlist');
+      }
+      
+      // Step 3: Get videos from uploads playlist
+      const playlistUrl = `https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${uploadsPlaylistId}&maxResults=50&key=${API_KEY}`;
+      const playlistResponse = await fetch(playlistUrl);
+      
+      if (!playlistResponse.ok) {
+        const errorData = await playlistResponse.json();
+        throw new Error(errorData.error?.message || 'Failed to fetch videos');
+      }
+      
+      const playlistData = await playlistResponse.json();
+      
+      if (!playlistData.items || playlistData.items.length === 0) {
+        throw new Error('No videos found in channel');
+      }
+      
+      // Convert to consistent format
+      const formattedVideos = playlistData.items.map(item => ({
+        id: { videoId: item.snippet.resourceId.videoId },
+        snippet: item.snippet
+      }));
+      
+      setVideos(formattedVideos);
+      setError(null);
+      
     } catch (err) {
-      console.error('Error fetching videos:', err);
-      setError('Unable to load videos at the moment');
+      console.error('Error fetching YouTube videos:', err);
+      setError(err.message || 'Unable to load videos');
+      setVideos([]);
     } finally {
       setLoading(false);
     }
