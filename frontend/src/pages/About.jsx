@@ -1,8 +1,12 @@
 import { motion } from 'framer-motion';
 import { Award, Heart, Sparkles, Users } from 'lucide-react';
+import { useState } from 'react';
 import { Helmet } from 'react-helmet';
+import ImageLightbox from '@/components/ImageLightbox';
+import ScrollingMarquee from '@/components/ScrollingMarquee';
 
 const About = () => {
+  const [lightboxImage, setLightboxImage] = useState(null);
   const timeline = [
     { year: '2011', event: 'B Green Carteres was founded with a vision to bring authentic flavors' },
     { year: '2017', event: 'Expanded to multiple locations across the city' },
@@ -13,21 +17,24 @@ const About = () => {
 
   const chefs = [
     {
-      name: 'Chef Rajesh Kumar',
-      role: 'Head Chef',
-      specialty: 'Tandoori & Grills',
+      name: 'Aslambhai',
+      role: 'Owner & Head Chef',
+      specialty: 'Gravies, Biryani, Tarkari & Gujarati Dishes',
+      contact: '+91 97237 01034',
       image: 'Professional Indian chef in white uniform with chef hat in modern kitchen'
     },
     {
-      name: 'Chef Maria Santos',
-      role: 'Seafood Specialist',
-      specialty: 'Coastal Cuisine',
+      name: 'Hajibhai',
+      role: 'Master Chef',
+      specialty: 'Biryani, Pulao, Gujarati Ghaari & Sweets',
+      contact: '+91 95748 72497',
       image: 'Female chef preparing fresh seafood in professional kitchen'
     },
     {
-      name: 'Chef Ahmed Hassan',
-      role: 'Biryani Master',
-      specialty: 'Rice & Curries',
+      name: 'Imtiyajbhai',
+      role: 'Specialist Chef',
+      specialty: 'Chicken 65, Mutton Chilli, Fried Items & Kheema Pulav',
+      contact: '+91 99981 41571',
       image: 'Chef preparing traditional biryani with aromatic spices'
     }
   ];
@@ -62,7 +69,9 @@ const About = () => {
         <meta name="description" content="Learn about B Green Caterers journey, our expert chefs, and our commitment to delivering premium non-veg cuisine with natural ingredients." />
       </Helmet>
 
-      <div className="pt-20 pb-12 px-4 bg-cream min-h-screen">
+      <ScrollingMarquee />
+
+      <div className="pt-32 sm:pt-36 pb-12 px-4 bg-cream min-h-screen">
         <div className="container mx-auto max-w-7xl">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -76,11 +85,11 @@ const About = () => {
           </motion.div>
 
           {/* Banner area - mobile optimized */}
-          <div className="mb-8">
+          <div className="mb-8 cursor-pointer" onClick={() => setLightboxImage({ src: '/images/banner.jpg', alt: 'B Green Caterers Banner' })}>
             <img
               src="/images/banner.jpg"
               alt="About banner"
-              className="w-full h-48 sm:h-64 md:h-80 lg:h-96 object-cover rounded-lg shadow-lg"
+              className="w-full h-auto object-contain rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300"
             />
           </div>
 
@@ -175,7 +184,17 @@ const About = () => {
                   <div className="p-4 sm:p-6 text-center">
                     <h3 className="text-xl sm:text-2xl font-bold text-forest mb-2">{chef.name}</h3>
                     <p className="text-gold font-semibold mb-2 text-sm sm:text-base">{chef.role}</p>
-                    <p className="text-gray-600 text-sm sm:text-base">{chef.specialty}</p>
+                    <p className="text-gray-600 text-sm sm:text-base mb-3">{chef.specialty}</p>
+                    {chef.contact && (
+                      <a 
+                        href={`https://wa.me/${chef.contact.replace(/[^0-9]/g, '')}?text=Hi%20${chef.name}!%20I%20would%20like%20to%20connect%20with%20you%20regarding%20your%20specialty%20in%20${encodeURIComponent(chef.specialty)}.`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-block text-forest hover:text-gold font-semibold text-sm sm:text-base transition-colors"
+                      >
+                        📞 {chef.contact}
+                      </a>
+                    )}
                   </div>
                 </motion.div>
               ))}
@@ -209,6 +228,14 @@ const About = () => {
           </motion.div>
         </div>
       </div>
+
+      {/* Image Lightbox */}
+      <ImageLightbox
+        src={lightboxImage?.src}
+        alt={lightboxImage?.alt}
+        isOpen={!!lightboxImage}
+        onClose={() => setLightboxImage(null)}
+      />
     </>
   );
 };

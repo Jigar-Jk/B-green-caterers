@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
-import { Clock, Facebook, Instagram, Mail, MapPin, Phone, Twitter } from 'lucide-react';
+import { Clock, Facebook, Instagram, Mail, MapPin, Phone, Youtube } from 'lucide-react';
 import { Helmet } from 'react-helmet';
+import ScrollingMarquee from '@/components/ScrollingMarquee';
 
 const Contact = () => {
   return (
@@ -10,7 +11,9 @@ const Contact = () => {
         <meta name="description" content="Contact B Green Caterers for reservations, catering, or inquiries. Visit us or reach out via phone, email, or social media." />
       </Helmet>
 
-      <div className="pt-20 pb-12 bg-cream min-h-screen">
+      <ScrollingMarquee />
+
+      <div className="pt-32 sm:pt-36 pb-12 bg-cream min-h-screen">
         <div className="container mx-auto px-4 max-w-7xl">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -32,7 +35,14 @@ const Contact = () => {
                   <MapPin className="w-6 h-6 sm:w-8 sm:h-8 text-forest flex-shrink-0 mt-1" />
                   <div>
                     <h3 className="text-lg sm:text-xl font-bold text-forest mb-2">Visit Us</h3>
-                    <p className="text-sm sm:text-base text-gray-700 leading-relaxed">B Green Caterers, nr. Kamdar Police Chowki, Gomtipur, Ahmedabad, Gujarat 380021</p>
+                    <a 
+                      href="https://www.google.com/maps/place/B+GREEN+CATERERS/@23.0201974,72.6061892,17z/data=!3m1!4b1!4m6!3m5!1s0x395e852c4ede1bf3:0x11d88d88327603f5!8m2!3d23.0201974!4d72.6087641!16s%2Fg%2F11h0tlhg2k"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm sm:text-base text-gray-700 leading-relaxed hover:text-gold transition-colors cursor-pointer inline-block"
+                    >
+                      B Green Caterers, nr. Kamdar Police Chowki, Gomtipur, Ahmedabad, Gujarat 380021
+                    </a>
                   </div>
                 </div>
               </div>
@@ -46,9 +56,9 @@ const Contact = () => {
                       <p className="text-sm sm:text-base text-gray-700">
                         <span className="font-medium">Main:</span>{' '}
                         <a 
-                          href="tel:+917433033031" 
+                          href="tel:+917433033031"
                           className="text-forest hover:text-gold font-semibold transition-colors duration-200 hover:underline"
-                          title="Click to call main number"
+                          title="Click to call"
                         >
                           74 330 330 31
                         </a>
@@ -56,7 +66,7 @@ const Contact = () => {
                       <p className="text-sm sm:text-base text-gray-700">
                         <span className="font-medium">Reservations:</span>{' '}
                         <a 
-                          href="https://wa.me/917433033031?text=Hi B Green Caterers! I would like to make a reservation. Please help me with table booking." 
+                          href="https://wa.me/917433033031?text=Hi%20B%20Green%20Caterers!%20I%20would%20like%20to%20make%20a%20reservation.%20Please%20help%20me%20with%20table%20booking." 
                           target="_blank" 
                           rel="noopener noreferrer"
                           className="text-forest hover:text-gold font-semibold transition-colors duration-200 hover:underline inline-flex items-center gap-1"
@@ -119,11 +129,22 @@ const Contact = () => {
                     <Instagram className="w-8 h-8" />
                   </a>
                   <a
+                    href="https://www.youtube.com/@bgreencaterers"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-forest hover:text-gold transition-colors transform hover:scale-110"
+                    title="Subscribe on YouTube"
+                  >
+                    <Youtube className="w-8 h-8" />
+                  </a>
+                  <a
                     href="#"
                     className="text-forest hover:text-gold transition-colors transform hover:scale-110"
-                    title="Follow us on Twitter"
+                    title="Follow us on X"
                   >
-                    <Twitter className="w-8 h-8" />
+                    <svg className="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+                      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                    </svg>
                   </a>
                 </div>
               </div>

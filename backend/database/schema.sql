@@ -24,7 +24,7 @@ CREATE TABLE IF NOT EXISTS menu_items (
     category_id INT NOT NULL,
     name VARCHAR(100) NOT NULL,
     description TEXT,
-    price DECIMAL(10, 2) NOT NULL,
+    price VARCHAR(50) NOT NULL COMMENT 'Can be numeric (e.g., "250.00") or "WhatsApp" for contact-based pricing',
     image_url VARCHAR(255),
     is_available BOOLEAN DEFAULT TRUE,
     is_chefs_pick BOOLEAN DEFAULT FALSE,

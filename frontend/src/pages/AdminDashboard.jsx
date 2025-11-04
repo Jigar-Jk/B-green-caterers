@@ -100,7 +100,7 @@ export default function AdminDashboard() {
       const itemData = {
         name: formData.name,
         category_id: parseInt(formData.category_id),
-        price: parseFloat(formData.price),
+        price: formData.price === 'WhatsApp' ? 'WhatsApp' : parseFloat(formData.price),
         description: formData.description,
         image: imageUrl,
         is_chefs_pick: formData.is_chefs_pick ? 1 : 0,
@@ -365,15 +365,54 @@ export default function AdminDashboard() {
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       Price (₹) *
                     </label>
-                    <input
-                      type="number"
-                      step="0.01"
-                      required
-                      value={formData.price}
-                      onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                      className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent"
-                      placeholder="250.00"
-                    />
+                    <div className="space-y-3">
+                      {/* Radio buttons for price type */}
+                      <div className="flex items-center space-x-4">
+                        <label className="flex items-center space-x-2 cursor-pointer">
+                          <input
+                            type="radio"
+                            name="priceType"
+                            value="manual"
+                            checked={formData.price !== 'WhatsApp'}
+                            onChange={() => {
+                              if (formData.price === 'WhatsApp') {
+                                setFormData({ ...formData, price: '' });
+                              }
+                            }}
+                            className="w-4 h-4 text-forest focus:ring-forest"
+                          />
+                          <span className="text-sm font-medium text-gray-700">Enter Price</span>
+                        </label>
+                        <label className="flex items-center space-x-2 cursor-pointer">
+                          <input
+                            type="radio"
+                            name="priceType"
+                            value="whatsapp"
+                            checked={formData.price === 'WhatsApp'}
+                            onChange={() => setFormData({ ...formData, price: 'WhatsApp' })}
+                            className="w-4 h-4 text-forest focus:ring-forest"
+                          />
+                          <span className="text-sm font-medium text-gray-700">WhatsApp</span>
+                        </label>
+                      </div>
+                      
+                      {/* Price input or WhatsApp display */}
+                      {formData.price === 'WhatsApp' ? (
+                        <div className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-600 flex items-center justify-center">
+                          <span className="font-medium">WhatsApp for Price</span>
+                        </div>
+                      ) : (
+                        <input
+                          type="number"
+                          step="0.01"
+                          required
+                          value={formData.price}
+                          onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                          className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-forest focus:border-transparent"
+                          placeholder="250.00"
+                        />
+                      )}
+                    </div>
                   </div>
 
                   {/* Image Upload */}
@@ -574,7 +613,11 @@ export default function AdminDashboard() {
 
                       {/* Price */}
                       <td className="px-6 py-4">
-                        <p className="font-bold text-gray-800">₹{parseFloat(item.price).toFixed(2)}</p>
+                        {item.price === 'WhatsApp' || isNaN(parseFloat(item.price)) ? (
+                          <p className="font-bold text-green-600">WhatsApp</p>
+                        ) : (
+                          <p className="font-bold text-gray-800">₹{parseFloat(item.price).toFixed(2)}</p>
+                        )}
                       </td>
 
                       {/* Status */}

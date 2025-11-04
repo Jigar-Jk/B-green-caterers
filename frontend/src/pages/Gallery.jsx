@@ -40,6 +40,24 @@ const Gallery = () => {
       setLoading(true);
       setError(null);
 
+      // Check cache first (1 hour expiry)
+      const CACHE_KEY = 'bgreen_youtube_videos';
+      const CACHE_DURATION = 60 * 60 * 1000; // 1 hour in milliseconds
+      
+      const cachedData = localStorage.getItem(CACHE_KEY);
+      if (cachedData) {
+        const { videos: cachedVideos, timestamp } = JSON.parse(cachedData);
+        const now = Date.now();
+        
+        // Use cached data if less than 1 hour old
+        if (now - timestamp < CACHE_DURATION) {
+          console.log('Using cached videos');
+          setVideos(cachedVideos);
+          setLoading(false);
+          return;
+        }
+      }
+
       const CHANNEL_HANDLE = 'bgreencaterers';
       
       // Step 1: Search for channel by handle
@@ -96,6 +114,13 @@ const Gallery = () => {
         snippet: item.snippet
       }));
       
+      // Save to cache
+      localStorage.setItem(CACHE_KEY, JSON.stringify({
+        videos: formattedVideos,
+        timestamp: Date.now()
+      }));
+      
+      console.log('Fetched and cached fresh videos');
       setVideos(formattedVideos);
       setError(null);
       

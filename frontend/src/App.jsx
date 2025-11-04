@@ -1,3 +1,4 @@
+import FloatingWhatsApp from '@/components/FloatingWhatsApp';
 import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
 import ScrollToTop from '@/components/ScrollToTop';
@@ -37,6 +38,7 @@ function AppContent() {
           </Routes>
         </main>
         {!isAdminRoute && <Footer />}
+        {!isAdminRoute && <FloatingWhatsApp />}
         <Toaster />
       </div>
     </>
