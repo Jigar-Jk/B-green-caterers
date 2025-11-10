@@ -27,10 +27,10 @@ const Home = () => {
   ];
 
   const menuImages = [
-    { src: '/images/02 Tava Fry Menu.jpg', alt: 'Tava Fry Menu - Signature Dishes' },
-    { src: '/images/DSC_0083.JPG', alt: 'Delicious Food Preparation' },
-    { src: '/images/DSC_0428.JPG', alt: 'Signature Dishes' },
-    { src: '/images/DSC_0548.JPG', alt: 'Special Menu Items' }
+    { src: '/Items/CHICKEN%20MLAI%20TIKKA.jpg', alt: 'Chicken Malai Tikka - Signature Dish' },
+    { src: '/Items/CHICKEN%20MLAI%20LOVLYPOP.jpg', alt: 'Chicken Malai Lollypop' },
+    { src: '/Items/B%20GREEN%20FRIED%20CHICKEN%20TANGDI.jpg', alt: 'B Green Fried Chicken Tangdi' },
+    { src: '/Items/MUTTON%20CHILLI%20DRY.jpg', alt: 'Mutton Chilli Dry' }
   ];
 
   const nextSlide = () => {
@@ -215,38 +215,35 @@ const Home = () => {
       {/* Our Story Section */}
       <section className="py-16 sm:py-20 md:py-24 bg-gradient-to-b from-cream to-white">
         <div className="container mx-auto px-4 sm:px-6 md:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-center">
-            {/* Left Side - Images Grid */}
+          {/* Heading - Single Line Above Everything */}
+          <motion.div
+            initial={{ opacity: 0, y: -30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+            className="mb-8 md:mb-12 text-center"
+          >
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold">
+              <span className="bg-[#fef3e2] px-3 py-1 text-[#D32F2F]">OUR STORY</span>
+              <span className="text-gray-800"> at B Green Caterers</span>
+            </h2>
+          </motion.div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12 items-start">
+            {/* Left Side - Image */}
             <motion.div
               initial={{ opacity: 0, x: -50 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8 }}
-              className="grid grid-cols-2 gap-4"
+              className="w-full"
             >
-              {/* Large Image */}
-              <div className="col-span-2">
-                <img 
-                  src="/images/IMG_20240314_175426288_HDR.jpg" 
-                  alt="Professional Catering Setup"
-                  className="w-full h-[300px] sm:h-[400px] object-cover rounded-lg shadow-xl"
-                />
-              </div>
-              {/* Three Small Images */}
-              <div className="col-span-1">
-                <img 
-                  src="/images/IMG_20240317_180050763.jpg" 
-                  alt="Food Display"
-                  className="w-full h-[150px] sm:h-[200px] object-cover rounded-lg shadow-lg"
-                />
-              </div>
-              <div className="col-span-1">
-                <img 
-                  src="/images/IMG_20240317_180326858.jpg" 
-                  alt="Culinary Excellence"
-                  className="w-full h-[150px] sm:h-[200px] object-cover rounded-lg shadow-lg"
-                />
-              </div>
+              <img 
+                src="/banners/Banner~1.webp" 
+                alt="Traditional Indian Thali - B Green Caterers"
+                className="w-full h-auto object-contain rounded-lg shadow-xl cursor-pointer hover:shadow-2xl transition-shadow duration-300"
+                onClick={() => setLightboxImage({ src: '/banners/Banner~1.webp', alt: 'Traditional Indian Thali - B Green Caterers' })}
+              />
             </motion.div>
 
             {/* Right Side - Content */}
@@ -256,14 +253,6 @@ const Home = () => {
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.2 }}
             >
-              {/* Heading */}
-              <div className="mb-6">
-                <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">
-                  <span className="bg-[#fef3e2] px-3 py-1 text-[#D32F2F]">OUR STORY</span>
-                  <span className="text-gray-800"> at B Green Caterers</span>
-                </h2>
-              </div>
-
               {/* Subheading */}
               <h3 className="text-2xl sm:text-3xl font-bold text-gray-800 mb-4">
                 Over a Decade of Culinary Excellence
@@ -313,15 +302,19 @@ const Home = () => {
         </div>
       </section>
 
-      {/* Why Choose Us Section with Background Image */}
+      {/* Why Choose Us Section with Parallax Background */}
       <section 
-        className="relative py-20 sm:py-24 md:py-32 bg-cover bg-center"
+        className="relative py-20 sm:py-24 md:py-32 bg-cover bg-center bg-fixed overflow-hidden"
         style={{
-          backgroundImage: 'url(https://images.unsplash.com/photo-1555244162-803834f70033?q=80&w=2070)'
+          backgroundImage: 'url(https://images.unsplash.com/photo-1598103442097-8b74394b95c6?q=80&w=2000)',
+          backgroundAttachment: 'fixed',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: 'cover'
         }}
       >
-        {/* Dark Overlay */}
-        <div className="absolute inset-0 bg-black/70"></div>
+        {/* Dark Overlay for better text readability */}
+        <div className="absolute inset-0 bg-black/75"></div>
 
         {/* Content */}
         <div className="relative z-10 container mx-auto px-4 sm:px-6 md:px-8">
@@ -338,10 +331,10 @@ const Home = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.8, delay: 0.2, type: "spring", stiffness: 60 }}
-              className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6 flex flex-wrap items-center justify-center gap-4"
+              className="text-4xl sm:text-5xl md:text-6xl font-bold mb-6"
             >
-              <span className="text-white">Why Choose</span>
-              <span className="bg-[#fef3e2] text-[#D32F2F] px-6 py-2 inline-block">
+              <span className="text-white">Why Choose </span>
+              <span className="text-[#D32F2F] font-extrabold tracking-wide">
                 B GREEN CATERERS
               </span>
             </motion.h2>
@@ -416,7 +409,7 @@ const Home = () => {
                     onClick={() => setLightboxImage(menuImages[currentSlide])}
                   >
                     <img 
-                      className="w-full h-[500px] object-cover hover:scale-110 transition-transform duration-500" 
+                      className="w-full h-[500px] object-cover hover:scale-105 transition-transform duration-500" 
                       alt={menuImages[currentSlide].alt}
                       src={menuImages[currentSlide].src}
                       loading="lazy"
@@ -449,42 +442,42 @@ const Home = () => {
                 <div className="col-span-1 space-y-4">
                   <div 
                     className="cursor-pointer relative overflow-hidden rounded-3xl shadow-xl"
-                    onClick={() => setLightboxImage(menuImages[1])}
+                    onClick={() => setLightboxImage({ src: '/banners/Menu 2~1.webp', alt: 'Menu Highlights' })}
                   >
                     <img 
-                      className="w-full h-[240px] object-cover hover:scale-110 transition-transform duration-500" 
-                      alt={menuImages[1].alt}
-                      src={menuImages[1].src}
+                      className="w-full h-[240px] object-cover hover:scale-105 transition-transform duration-500" 
+                      alt="Menu Highlights"
+                      src="/banners/Menu 2~1.webp"
                       loading="lazy"
                     />
                   </div>
                   <div 
                     className="cursor-pointer relative overflow-hidden rounded-3xl shadow-xl"
-                    onClick={() => setLightboxImage(menuImages[2])}
+                    onClick={() => setLightboxImage({ src: '/banners/Menu 3~1.webp', alt: 'Special Menu Items' })}
                   >
                     <img 
-                      className="w-full h-[240px] object-cover hover:scale-110 transition-transform duration-500" 
-                      alt={menuImages[2].alt}
-                      src={menuImages[2].src}
+                      className="w-full h-[240px] object-cover hover:scale-105 transition-transform duration-500" 
+                      alt="Special Menu Items"
+                      src="/banners/Menu 3~1.webp"
                       loading="lazy"
                     />
                   </div>
                 </div>
               </div>
 
-              {/* "Since 2011" Badge */}
+              {/* "Since 2011" Badge - Smaller Size */}
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
                 <div className="relative">
                   {/* Gold outer ring */}
-                  <div className="w-48 h-48 rounded-full bg-gradient-to-br from-[#d4af37] to-[#c4941f] p-2 shadow-2xl">
+                  <div className="w-32 h-32 sm:w-36 sm:h-36 rounded-full bg-gradient-to-br from-[#d4af37] to-[#c4941f] p-1.5 shadow-2xl">
                     {/* Maroon inner circle */}
                     <div className="w-full h-full rounded-full bg-[#8B2942] flex flex-col items-center justify-center text-white shadow-inner">
-                      <span className="text-xl font-normal">Since</span>
-                      <span className="text-5xl font-bold">2011</span>
+                      <span className="text-sm sm:text-base font-normal">Since</span>
+                      <span className="text-3xl sm:text-4xl font-bold">2011</span>
                     </div>
                   </div>
                   {/* Decorative border lines */}
-                  <div className="absolute inset-0 rounded-full border-4 border-white/20"></div>
+                  <div className="absolute inset-0 rounded-full border-2 border-white/20"></div>
                 </div>
               </div>
             </motion.div>

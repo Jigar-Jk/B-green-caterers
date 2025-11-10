@@ -62,7 +62,7 @@ const Navbar = () => {
         <div className="flex items-center justify-between h-16 sm:h-20">
           <Link to="/" className="flex items-center space-x-2 sm:space-x-3">
             <img
-              src="/images/logo_bgreen_-removebg-preview.png"
+              src="/banners/logo_bgreen_-removebg-preview.png"
               alt="BGREEN caterers logo"
               className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 object-contain"
             />

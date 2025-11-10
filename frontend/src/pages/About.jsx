@@ -84,15 +84,6 @@ const About = () => {
             </p>
           </motion.div>
 
-          {/* Banner area - mobile optimized */}
-          <div className="mb-8 cursor-pointer" onClick={() => setLightboxImage({ src: '/images/banner.jpg', alt: 'B Green Caterers Banner' })}>
-            <img
-              src="/images/banner.jpg"
-              alt="About banner"
-              className="w-full h-auto object-contain rounded-lg shadow-lg hover:shadow-2xl transition-shadow duration-300"
-            />
-          </div>
-
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center mb-16 lg:mb-20">
             <motion.div
               initial={{ opacity: 0, x: -50 }}
